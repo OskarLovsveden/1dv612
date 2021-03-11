@@ -18,6 +18,9 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "helmet": "^4.4.1",
+    "http-errors": "^1.8.0",
+    "mongoose": "^5.11.19",
+    "morgan": "^1.10.0",
     "passport-gitlab2": "^5.0.0"
   },
   "devDependencies": {
