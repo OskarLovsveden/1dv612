@@ -24,15 +24,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 passportInit()
 
-// app.use('/', router)
-
-app.use('/',
-    (req, res, next) => {
-        console.log(req.user)
-        next()
-    },
-    router
-)
+app.use('/', router)
 
 app.listen(process.env.PORT, () => {
     console.log(`Example app listening at http://localhost:${process.env.PORT}`)
