@@ -15,13 +15,11 @@ const app = express()
 
 app.use(cors({
     origin: process.env.CLIENT_ORIGIN,
-    credentials: true,
-    methods: 'GET'
+    credentials: true
 }))
 
 app.use(helmet())
 app.use(logger('dev'))
-app.use(express.json())
 
 app.use(session({
     secret: 'secrets',
