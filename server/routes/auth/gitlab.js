@@ -7,7 +7,9 @@ export const router = express.Router()
 
 const controller = new GitLabController()
 
-router.get('/', passport.authenticate('gitlab'))
+router.get('/', passport.authenticate('gitlab', {
+    scope: ['api']
+}))
 
 router.get('/callback', passport.authenticate('gitlab', {
     successRedirect: process.env.CLIENT_ORIGIN,
@@ -34,4 +36,8 @@ router.get('/failed', (req, res) => {
         success: false,
         message: 'user failed to authenticate.'
     })
+})
+
+router.get('/check', (req, res) => {
+    res.json({ user: req.user })
 })
