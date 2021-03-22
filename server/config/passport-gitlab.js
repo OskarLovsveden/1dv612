@@ -23,20 +23,19 @@ export const setupPassport = () => {
         callbackURL: 'http://localhost:8000/auth/gitlab/callback',
         baseURL: 'https://gitlab.lnu.se'
     }, async (token, tokenSecret, profile, done) => {
-        const currentUser = await GLUser.findOne({
-            gitlab_id: profile.id
+        const filter = { gitlab_id: profile.id }
+        const update = {
+            name: profile.displayName,
+            avatar: profile.avatarUrl,
+            token: token
+        }
+
+        const user = await GLUser.findOneAndUpdate(filter, update, {
+            upsert: true,
+            new: true
         })
 
-        if (!currentUser) {
-            const newUser = await new GLUser({
-                name: profile.displayName,
-                gitlab_id: profile.id
-            }).save()
-
-            if (newUser) {
-                done(null, newUser)
-            }
-        }
-        done(null, currentUser)
+        user.save()
+        done(null, user)
     }))
 }
