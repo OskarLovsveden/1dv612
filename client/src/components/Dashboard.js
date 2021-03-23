@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Button } from '@chakra-ui/react'
+import { Box, Button, Menu, MenuButton, MenuList, MenuOptionGroup, MenuItemOption } from '@chakra-ui/react'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 
 import axios from 'axios'
 
@@ -16,18 +17,31 @@ const Dashboard = () => {
             baseURL: process.env.REACT_APP_SERVER_URL
         })
 
-        console.log(res.data)
+        setGroups(res.data)
     }
 
-    const logout = () => {
+    const doLogout = () => {
         window.open(`${process.env.REACT_APP_SERVER_URL}/auth/gitlab/logout`, '_self')
-        // setUser(null)
     }
 
     return (
-        <>
-            <Button onClick={logout}>Logout</Button>
-        </>
+        <Box>
+            <Button onClick={doLogout}>Logout</Button>
+            <Menu>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                    Your Groups
+                </MenuButton>
+                <MenuList minWidth="240px">
+                    {groups && <MenuOptionGroup defaultValue={groups[0].name} type="radio">
+                        {groups.map(g => (
+                            <MenuItemOption value={g.name} key={g.id}>
+                                {g.name}
+                            </MenuItemOption>
+                        ))}
+                    </MenuOptionGroup>}
+                </MenuList>
+            </Menu>
+        </Box>
     )
 }
 
