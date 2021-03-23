@@ -22,7 +22,7 @@ export const setupPassport = () => {
         clientSecret: process.env.GITLAB_APP_SECRET,
         callbackURL: 'http://localhost:8000/auth/gitlab/callback',
         baseURL: 'https://gitlab.lnu.se'
-    }, async (token, tokenSecret, profile, done) => {
+    }, async (token, refreshToken, profile, done) => {
         const filter = { gitlab_id: profile.id }
         const update = {
             name: profile.displayName,
