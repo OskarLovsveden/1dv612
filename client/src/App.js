@@ -5,8 +5,6 @@ import {
   useLocation,
 } from 'react-router-dom'
 
-import axios from 'axios'
-
 import routes from './utils/routes.js'
 import PrivateRoute from './components/routes/PrivateRoute.js'
 import PublicRoute from './components/routes/PublicRoute.js'
@@ -15,9 +13,15 @@ import Login from './components/Login.js'
 import NotFound from './components/NotFound.js'
 import Dashboard from './components/Dashboard.js'
 
+import axios from 'axios'
+
 const App = () => {
   const [isAuthenticated, setAuthenticated] = useState(false)
   const location = useLocation()
+
+  useEffect(() => {
+    checkAuthentication()
+  }, [])
 
   const checkAuthentication = async () => {
     const res = await axios('/auth/gitlab/check', {
@@ -28,11 +32,6 @@ const App = () => {
     // res.data.user ? setUser(res.data.user) : setUser(null)
     res.data.user ? setAuthenticated(true) : setAuthenticated(false)
   }
-
-  useEffect(() => {
-    checkAuthentication()
-  }, [])
-
 
   return (
     <div className="App">
