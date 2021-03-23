@@ -9,7 +9,7 @@ export const router = express.Router()
 
 router.get('/groups', async (req, res, next) => {
     try {
-        const response = await axios('https://gitlab.lnu.se/api/v4/groups?min_access_level=40', {
+        const response = await axios('https://gitlab.lnu.se/api/v4/groups?min_access_level=50', {
             headers: {
                 'Authorization': 'Bearer ' + req.user.token
             }
