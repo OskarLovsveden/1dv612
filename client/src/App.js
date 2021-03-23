@@ -1,64 +1,49 @@
 import { useEffect, useState } from 'react'
+
 import {
   Switch,
-  Route,
-  useLocation
+  useLocation,
 } from 'react-router-dom'
 
 import axios from 'axios'
 
+import routes from './utils/routes.js'
+import PrivateRoute from './components/routes/PrivateRoute.js'
+import PublicRoute from './components/routes/PublicRoute.js'
+import Nav from './components/Nav.js'
+import Login from './components/Login.js'
+import NotFound from './components/NotFound.js'
+import Dashboard from './components/Dashboard.js'
+
 const App = () => {
-  const [user, setUser] = useState()
+  const [isAuthenticated, setAuthenticated] = useState(false)
   const location = useLocation()
 
-  useEffect(() => {
-    // checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
+  const checkAuthentication = async () => {
     const res = await axios('/auth/gitlab/check', {
       withCredentials: true,
       baseURL: process.env.REACT_APP_SERVER_URL
     })
-    res.data.user ? setUser(res.data.user) : setUser(null)
+
+    // res.data.user ? setUser(res.data.user) : setUser(null)
+    res.data.user ? setAuthenticated(true) : setAuthenticated(false)
   }
 
-  const login = () => {
-    window.open(`${process.env.REACT_APP_SERVER_URL}/auth/gitlab`, '_self')
-  }
+  useEffect(() => {
+    checkAuthentication()
+  }, [])
 
-  const logout = () => {
-    window.open(`${process.env.REACT_APP_SERVER_URL}/auth/gitlab/logout`, '_self')
-    setUser(null)
-  }
 
   return (
     <div className="App">
-      {location.pathname !== '/login' && <Nav />}
+      {location.pathname !== routes.LOGIN && <Nav />}
       <Switch>
-        <Route exact path="/" component={Main} />
-        <Route exact path="/login" component={Login} />
-        <Route component={NotFound} />
+        <PrivateRoute isAuthenticated={isAuthenticated} component={Dashboard} path={routes.DASHBOARD} exact />
+        <PublicRoute isAuthenticated={isAuthenticated} restricted component={Login} path={routes.LOGIN} exact />
+        <PublicRoute isAuthenticated={isAuthenticated} component={NotFound} />
       </Switch>
     </div >
   )
 }
-
-const Nav = () => {
-  return <div>NAV</div>
-}
-
-const Login = () => {
-  return <div>LOGIN</div>
-}
-
-const Main = () => {
-  return <div>MAIN</div>
-}
-
-const NotFound = () => {
-  return <div>404 - <code>{window.location.pathname}</code> is not a valid page</div>
-}
-
 
 export default App
