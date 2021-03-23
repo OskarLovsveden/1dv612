@@ -1,11 +1,11 @@
 import express from 'express'
 import passport from 'passport'
 
-import { GitLabController } from '../../controllers/gitlab-controller.js'
+// import { GitLabAuthController as Controller} from '../../controllers/gitlab-controller.js'
 
 export const router = express.Router()
 
-const controller = new GitLabController()
+// const controller = new Controller()
 
 router.get('/', passport.authenticate('gitlab', {
     scope: ['api']
