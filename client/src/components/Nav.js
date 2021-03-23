@@ -1,5 +1,7 @@
+import { Box } from '@chakra-ui/react'
+
 const Nav = () => {
-    return <div>NAV</div>
+    return <Box>NAV</Box>
 }
 
 export default Nav
