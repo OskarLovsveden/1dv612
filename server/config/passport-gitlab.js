@@ -2,7 +2,10 @@ import passport from 'passport'
 import { Strategy as GitLabStrategy } from 'passport-gitlab2'
 import { GLUser } from '../models/GLUser.js'
 
-export const setupPassport = () => {
+export const setupPassport = (app) => {
+
+    app.use(passport.initialize())
+    app.use(passport.session())
 
     passport.serializeUser((user, done) => {
         done(null, user._id)
