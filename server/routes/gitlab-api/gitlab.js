@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { response } from 'express'
 import axios from 'axios'
 
 // import { GitLabApiController as Controller } from '../../controllers/gitlab-api-controller.js'
@@ -7,9 +7,11 @@ export const router = express.Router()
 
 // const controller = new Controller()
 
+const base_url = 'https://gitlab.lnu.se/api/v4/'
+
 router.get('/groups', async (req, res, next) => {
     try {
-        const response = await axios('https://gitlab.lnu.se/api/v4/groups?min_access_level=50', {
+        const response = await axios(base_url + 'groups?min_access_level=50', {
             headers: {
                 'Authorization': 'Bearer ' + req.user.token
             }
@@ -20,6 +22,31 @@ router.get('/groups', async (req, res, next) => {
             "web_url": group.web_url,
             "name": group.name
         }))
+
+        for (const group of groups) {
+            const response = await axios(base_url + 'groups/' + group.id, {
+                headers: {
+                    'Authorization': 'Bearer ' + req.user.token
+                }
+            })
+
+            group.projects = response.data.projects.map(project => ({
+                "id": project.id,
+                "web_url": project.web_url,
+                "name": project.name,
+                "issues": project._links.issues
+            }))
+
+            for (const project of group.projects) {
+                const res = await axios(project.issues, {
+                    headers: {
+                        'Authorization': 'Bearer ' + req.user.token
+                    }
+                })
+
+                project.issues = res.data
+            }
+        }
 
         res.send(groups)
 
