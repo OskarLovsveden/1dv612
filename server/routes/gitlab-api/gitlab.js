@@ -44,7 +44,13 @@ router.get('/groups', async (req, res, next) => {
                     }
                 })
 
-                project.issues = res.data
+                project.issues = res.data.map(issue => ({
+                    id: issue.id,
+                    title: issue.title,
+                    description: issue.description,
+                    state: issue.state,
+                    author: issue.author
+                }))
             }
         }
 
