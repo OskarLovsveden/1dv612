@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Button, Menu, MenuButton, MenuList, MenuOptionGroup, MenuItemOption, List, ListItem } from '@chakra-ui/react'
+import { Box, Button, Menu, MenuButton, MenuList, MenuOptionGroup, MenuItemOption, Spinner } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 
 import GitLabGroup from './GitLabGroup'
@@ -32,8 +32,8 @@ const Dashboard = () => {
     return (
         <Box>
             <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                    Your Groups
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} minW="240px">
+                    {selectedGroup ? selectedGroup.name : <Spinner />}
                 </MenuButton>
                 <MenuList minWidth="240px">
                     {
