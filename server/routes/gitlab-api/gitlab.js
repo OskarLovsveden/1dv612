@@ -1,21 +1,14 @@
-import express, { response } from 'express'
-import axios from 'axios'
-
+import express from 'express'
+import AxiosHelper from '../../utils/AxiosHelper.js'
 // import { GitLabApiController as Controller } from '../../controllers/gitlab-api-controller.js'
 
 export const router = express.Router()
-
 // const controller = new Controller()
-
-const base_url = 'https://gitlab.lnu.se/api/v4/'
+const axios = new AxiosHelper()
 
 router.get('/groups', async (req, res, next) => {
     try {
-        const response = await axios(base_url + 'groups?min_access_level=50', {
-            headers: {
-                'Authorization': 'Bearer ' + req.user.token
-            }
-        })
+        const response = await axios.get('/groups?min_access_level=50', req.user.token, process.env.GITLAB_API_BASE_URL)
 
         const groups = response.data.map(group => ({
             "id": group.id,
@@ -24,11 +17,7 @@ router.get('/groups', async (req, res, next) => {
         }))
 
         for (const group of groups) {
-            const response = await axios(base_url + 'groups/' + group.id, {
-                headers: {
-                    'Authorization': 'Bearer ' + req.user.token
-                }
-            })
+            const response = await axios.get(`/groups/${group.id}`, req.user.token, process.env.GITLAB_API_BASE_URL)
 
             group.projects = response.data.projects.map(project => ({
                 "id": project.id,
@@ -38,13 +27,9 @@ router.get('/groups', async (req, res, next) => {
             }))
 
             for (const project of group.projects) {
-                const res = await axios(project.issues, {
-                    headers: {
-                        'Authorization': 'Bearer ' + req.user.token
-                    }
-                })
+                const response = await axios.get(project.issues, req.user.token)
 
-                project.issues = res.data.map(issue => ({
+                project.issues = response.data.map(issue => ({
                     id: issue.id,
                     title: issue.title,
                     description: issue.description,
