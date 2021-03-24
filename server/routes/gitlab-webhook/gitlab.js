@@ -7,4 +7,12 @@ export const router = express.Router()
 
 // const controller = new Controller()
 
-router.post('/', async (req, res, next) => { console.log('doFunkyShit') })
+router.post('/:token', async (req, res, next) => {
+    console.log('add hook')
+    res.sendStatus(200)
+})
+
+router.post('/', async (req, res, next) => {
+    console.log('new data - notify user')
+    res.sendStatus(200)
+})
