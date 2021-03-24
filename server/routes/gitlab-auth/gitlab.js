@@ -22,13 +22,10 @@ router.get('/logout', (req, res) => {
 })
 
 router.get('/success', (req, res) => {
-    if (req.user) {
-        res.json({
-            success: true,
-            message: 'user has successfully authenticated',
-            user: req.user
-        })
-    }
+    res.json({
+        success: true,
+        message: 'user has successfully authenticated'
+    })
 })
 
 router.get('/failed', (req, res) => {
