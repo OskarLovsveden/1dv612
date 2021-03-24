@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react'
-
-import {
-  Switch,
-  useLocation,
-} from 'react-router-dom'
-
+import { Switch, useLocation } from 'react-router-dom'
 import { Container, Spinner } from '@chakra-ui/react'
 
 import routes from './utils/routes.js'
@@ -15,6 +10,7 @@ import Login from './components/Login.js'
 import NotFound from './components/NotFound.js'
 import Dashboard from './components/Dashboard.js'
 
+import { connectSocket } from './utils/socket.js'
 import axios from 'axios'
 
 const App = () => {
@@ -33,7 +29,13 @@ const App = () => {
     })
 
     // TODO - Save user in context
-    res.data.user ? setAuthenticated(true) : setAuthenticated(false)
+    if (res.data) {
+      setAuthenticated(true)
+      connectSocket(res.data.token)
+    } else {
+      setAuthenticated(false)
+    }
+
     setLoading(false)
   }
 
