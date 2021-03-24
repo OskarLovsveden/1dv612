@@ -20,13 +20,8 @@ const Dashboard = () => {
         setGroups(res.data)
     }
 
-    const doLogout = () => {
-        window.open(`${process.env.REACT_APP_SERVER_URL}/auth/gitlab/logout`, '_self')
-    }
-
     return (
         <Box>
-            <Button onClick={doLogout}>Logout</Button>
             <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                     Your Groups
