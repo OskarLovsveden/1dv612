@@ -3,11 +3,12 @@ import session from 'express-session'
 import cors from 'cors'
 import helmet from 'helmet'
 import logger from 'morgan'
-import passport from 'passport'
 
-import { router } from './routes/router.js'
 import { setupPassport } from './config/passport-gitlab.js'
 import { connectDB } from './config/mongoose.js'
+import { connectSocket } from './utils/socket.js'
+
+import { router } from './routes/router.js'
 
 const main = async () => {
     await connectDB()
@@ -29,13 +30,11 @@ const main = async () => {
         cookie: { maxAge: 60 * 60 * 1000 }
     }))
 
-    app.use(passport.initialize())
-    app.use(passport.session())
-    setupPassport()
+    setupPassport(app)
 
     app.use('/', router)
 
-    app.listen(process.env.PORT, () => {
+    connectSocket(app).listen(process.env.PORT, () => {
         console.log(`Example app listening at http://localhost:${process.env.PORT}`)
         console.log(`Press ctrl + C to terminate...`)
     })
