@@ -38,17 +38,15 @@ const App = () => {
   }
 
   return (
-    <Container>
+    <Container centerContent>
       {location.pathname !== routes.LOGIN && <Nav />}
-      {
-        loading
-          ? <Spinner />
-          : <Switch>
-            <PrivateRoute isAuthenticated={isAuthenticated} component={Dashboard} path={routes.DASHBOARD} exact />
-            <PublicRoute isAuthenticated={isAuthenticated} restricted component={Login} path={routes.LOGIN} exact />
-            <PublicRoute isAuthenticated={isAuthenticated} component={NotFound} />
-          </Switch>
-      }
+      {loading
+        ? <Spinner />
+        : <Switch>
+          <PrivateRoute isAuthenticated={isAuthenticated} component={Dashboard} path={routes.DASHBOARD} exact />
+          <PublicRoute isAuthenticated={isAuthenticated} restricted component={Login} path={routes.LOGIN} exact />
+          <PublicRoute isAuthenticated={isAuthenticated} component={NotFound} />
+        </Switch>}
     </Container >
   )
 }
