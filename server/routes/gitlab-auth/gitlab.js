@@ -36,5 +36,5 @@ router.get('/failed', (req, res) => {
 })
 
 router.get('/check', (req, res) => {
-    res.json({ user: req.user })
+    res.json(req.user)
 })
