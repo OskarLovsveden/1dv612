@@ -1,6 +1,9 @@
 import { createServer } from 'http'
 import { Server as socket } from 'socket.io'
 
+// TODO - Socket model/database
+export let connections = []
+
 export const connectSocket = (app) => {
 
     const server = createServer(app)
@@ -12,8 +15,6 @@ export const connectSocket = (app) => {
 
     app.set('io', io)
 
-    // TODO - Socket model/database
-    let connections = []
 
     io.on('connection', (socket) => {
         const identifier = socket.handshake.query.identifier

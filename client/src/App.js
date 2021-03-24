@@ -28,6 +28,14 @@ const App = () => {
       baseURL: process.env.REACT_APP_SERVER_URL
     })
 
+    // ADD WEB HOOK TEST
+    await axios(`/webhook/gitlab/8475`, {
+      method: 'POST',
+      withCredentials: true,
+      baseURL: process.env.REACT_APP_SERVER_URL
+    })
+    // END TEST
+
     // TODO - Save user in context
     if (res.data) {
       setAuthenticated(true)
