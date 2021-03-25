@@ -8,7 +8,7 @@ export const router = express.Router()
 // const controller = new Controller()
 
 router.get('/', passport.authenticate('gitlab', {
-    scope: ['api']
+    scope: ['api read_user read_api read_repository write_repository read_registry write_registry sudo openid profile email']
 }))
 
 router.get('/callback', passport.authenticate('gitlab', {
