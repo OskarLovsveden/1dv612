@@ -26,4 +26,23 @@ export default class AxiosHelper {
 
         return response
     }
+
+    async setHook(projectID, token) {
+        const url = `${process.env.GITLAB_API_BASE_URL}/projects/${projectID}/hooks`
+
+        const params = new URLSearchParams()
+        params.append('url', 'https://7c77fb7547de.ngrok.io/webhook/gitlab')
+        params.append('token', token)
+        params.append('issues_events', true)
+
+        const response = await axios(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            data: params
+        })
+
+        return response
+    }
 }
