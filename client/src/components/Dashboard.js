@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 import {
@@ -7,14 +8,13 @@ import {
     MenuButton,
     MenuList,
     MenuOptionGroup,
-    MenuItemOption,
-    IconButton,
+    MenuItemOption
 } from '@chakra-ui/react'
 
-import { ChevronDownIcon, SettingsIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 
 import GitLabGroup from './GitLabGroup'
-import axios from 'axios'
+import Settings from './Settings'
 
 const Dashboard = () => {
     const [groups, setGroups] = useState()
@@ -39,18 +39,6 @@ const Dashboard = () => {
         setSelectedGroup(group)
     }
 
-    // const testAddHook = async () => {
-    //     // ADD WEB HOOK TEST
-    //     const res = await axios(`/webhook/gitlab/13511`, {
-    //         method: 'POST',
-    //         withCredentials: true,
-    //         baseURL: process.env.REACT_APP_SERVER_URL
-    //     })
-
-    //     console.log(res.data)
-    //     // END TEST
-    // }
-
     return (
         <Box p="1">
             <Menu>
@@ -64,7 +52,7 @@ const Dashboard = () => {
                     Select Group
                 </MenuButton>
                 <Box as="span" ml="2" color="gray.600">
-                    <IconButton aria-label="Settings" icon={<SettingsIcon />} />
+                    <Settings selectedGroup={selectedGroup} />
                 </Box>
                 <MenuList>
                     {
