@@ -1,5 +1,4 @@
-import { Box, Button, IconButton } from '@chakra-ui/react'
-import { SettingsIcon } from '@chakra-ui/icons'
+import { Box, Button, Flex, Spacer, Heading } from '@chakra-ui/react'
 
 const doLogout = () => {
     window.open(`${process.env.REACT_APP_SERVER_URL}/auth/gitlab/logout`, '_self')
@@ -7,10 +6,13 @@ const doLogout = () => {
 
 const Nav = () => {
     return (
-        <Box>
-            <Button onClick={doLogout}>Logout</Button>
-            <IconButton icon={<SettingsIcon />} />
-        </Box>
+        <Flex border="1px" borderColor="gray.200" p="2">
+            <Box p="2">
+                <Heading size="md">GitLab App</Heading>
+            </Box>
+            <Spacer />
+            <Box as={Button} onClick={doLogout}>Logout</Box>
+        </Flex >
     )
 }
 
