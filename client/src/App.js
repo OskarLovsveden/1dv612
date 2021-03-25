@@ -40,7 +40,7 @@ const App = () => {
   }
 
   return (
-    <Container centerContent>
+    <Container padding={1}>
       {location.pathname !== routes.LOGIN && <Nav />}
       {loading
         ? <Spinner />
