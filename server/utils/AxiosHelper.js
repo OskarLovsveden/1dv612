@@ -27,11 +27,11 @@ export default class AxiosHelper {
         return response
     }
 
-    async setHook(projectID, token) {
-        const url = `${process.env.GITLAB_API_BASE_URL}/projects/${projectID}/hooks`
+    async setHook(groupID, token) {
+        const url = `${process.env.GITLAB_API_BASE_URL}/groups/${groupID}/hooks`
 
         const params = new URLSearchParams()
-        params.append('url', 'https://7c77fb7547de.ngrok.io/webhook/gitlab')
+        params.append('url', 'https://17015c7393bc.ngrok.io/webhook/gitlab')
         params.append('token', process.env.GITLAB_WEBHOOK_TOKEN)
         params.append('issues_events', true)
 
