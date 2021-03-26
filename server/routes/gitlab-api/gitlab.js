@@ -1,10 +1,9 @@
 import express from 'express'
-import AxiosHelper from '../../utils/AxiosHelper.js'
+import * as axios from '../../utils/axios-helper.js'
 // import { GitLabApiController as Controller } from '../../controllers/gitlab-api-controller.js'
 
 export const router = express.Router()
 // const controller = new Controller()
-const axios = new AxiosHelper()
 
 router.get('/groups', async (req, res, next) => {
     try {
@@ -34,13 +33,13 @@ router.get('/groups', async (req, res, next) => {
                     title: issue.title,
                     description: issue.description,
                     state: issue.state,
+                    updated_at: issue.updated_at,
                     author: issue.author
                 }))
             }
         }
 
         res.send(groups)
-
     } catch (error) {
         next(error)
     }

@@ -1,5 +1,6 @@
 import express from 'express'
 import passport from 'passport'
+import { GLUser } from '../../models/GLUser.js'
 
 // import { GitLabAuthController as Controller} from '../../controllers/gitlab-controller.js'
 
@@ -16,7 +17,9 @@ router.get('/callback', passport.authenticate('gitlab', {
     failureRedirect: '/auth/gitlab/failed'
 }))
 
-router.get('/logout', (req, res) => {
+router.get('/logout', async (req, res) => {
+    await GLUser.logout(req.user._id)
+
     req.logout()
     res.redirect(process.env.CLIENT_ORIGIN)
 })

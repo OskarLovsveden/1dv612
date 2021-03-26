@@ -2,14 +2,12 @@ import express from 'express'
 import createError from 'http-errors'
 
 import { connections } from '../../utils/socket.js'
-import AxiosHelper from '../../utils/AxiosHelper.js'
-import { News } from '../../models/News.js'
+import * as axios from '../../utils/axios-helper.js'
 
 // import { GitLabWebhookController as Controller } from '../../controllers/gitlab-webhook-controller.js'
 
 export const router = express.Router()
 // const controller = new Controller()
-const axios = new AxiosHelper()
 
 const checkHeader = async (req, res, next) => {
     try {
@@ -41,11 +39,6 @@ router.post('/',
                     state: issue.object_attributes.state,
                     author: issue.user
                 })
-            } else {
-                await new News({
-                    gitlab_id: issue.user.id,
-                    issue_id: issue.object_attributes.id
-                }).save()
             }
 
             if ('User wants notification') {
@@ -57,15 +50,14 @@ router.post('/',
         }
     })
 
-router.post('/:project', async (req, res, next) => {
+router.post('/:group', async (req, res, next) => {
     try {
         if (!req.user) {
             next(createError(403))
             return
         }
 
-        const response = await axios.setHook(req.params.project, req.user.token)
-        console.log(response.data)
+        await axios.setHook(req.params.group, req.user.token)
 
         res.sendStatus(200)
     } catch (error) {
