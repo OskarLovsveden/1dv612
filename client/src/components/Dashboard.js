@@ -14,7 +14,6 @@ import {
 import { ChevronDownIcon } from '@chakra-ui/icons'
 
 import GitLabGroup from './GitLabGroup'
-import Settings from './Settings'
 
 const Dashboard = () => {
     const [groups, setGroups] = useState()
@@ -52,7 +51,7 @@ const Dashboard = () => {
                     Select Group
                 </MenuButton>
                 <Box as="span" ml="2" color="gray.600">
-                    <Settings selectedGroup={selectedGroup} />
+                    {/* SETTINGS BUTTON HERE */}
                 </Box>
                 <MenuList>
                     {
