@@ -31,7 +31,7 @@ const App = () => {
     // TODO - Save user in context
     if (res.data) {
       setAuthenticated(true)
-      connectSocket(res.data.token)
+      connectSocket(res.data.gitlab_id)
     } else {
       setAuthenticated(false)
     }
