@@ -12,7 +12,9 @@ const GitLabGroup = (props) => {
                             <h2>
                                 <AccordionButton>
                                     <Box flex="1" textAlign="left">
-                                        New issue <Box textDecor="underline" as="span">{i.title}</Box>
+                                        Issue
+                                        <Box textDecor="underline" as="span" ml="2">{i.title}</Box>
+                                        {i.new && <Box as="span" ml="2" color="green.300">NEW</Box>}
                                     </Box>
                                     <AccordionIcon />
                                 </AccordionButton>
