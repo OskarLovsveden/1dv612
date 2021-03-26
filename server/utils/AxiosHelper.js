@@ -32,7 +32,7 @@ export default class AxiosHelper {
 
         const params = new URLSearchParams()
         params.append('url', 'https://7c77fb7547de.ngrok.io/webhook/gitlab')
-        params.append('token', token)
+        params.append('token', process.env.GITLAB_WEBHOOK_TOKEN)
         params.append('issues_events', true)
 
         const response = await axios(url, {
