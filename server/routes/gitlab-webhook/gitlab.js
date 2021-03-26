@@ -3,6 +3,7 @@ import createError from 'http-errors'
 
 import { connections } from '../../utils/socket.js'
 import AxiosHelper from '../../utils/AxiosHelper.js'
+import { News } from '../../models/News.js'
 
 // import { GitLabWebhookController as Controller } from '../../controllers/gitlab-webhook-controller.js'
 
@@ -30,7 +31,7 @@ router.post('/',
             const io = req.app.get('io')
             const issue = req.body
 
-            const connection = connections.find(c => c.identifier === '123')
+            const connection = connections.find(c => c.identifier === (issue.user.id).toString())
 
             if (connection) {
                 io.to(connection.socket_id).emit('webhook', {
@@ -41,9 +42,10 @@ router.post('/',
                     author: issue.user
                 })
             } else {
-                // Save in DB
-                // User ID
-                // Issue ID
+                await new News({
+                    gitlab_id: issue.user.id,
+                    issue_id: issue.object_attributes.id
+                }).save()
             }
 
             if ('User wants notification') {
