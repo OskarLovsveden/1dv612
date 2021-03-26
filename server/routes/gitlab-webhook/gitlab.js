@@ -10,6 +10,50 @@ export const router = express.Router()
 // const controller = new Controller()
 const axios = new AxiosHelper()
 
+const checkHeader = async (req, res, next) => {
+    try {
+        if (req.headers['x-gitlab-token'] === process.env.GITLAB_WEBHOOK_TOKEN) {
+            res.sendStatus(200)
+            next()
+        } else {
+            res.sendStatus(400)
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
+router.post('/',
+    async (req, res, next) => await checkHeader(req, res, next),
+    async (req, res, next) => {
+        try {
+            const io = req.app.get('io')
+            const issue = req.body
+
+            const connection = connections.find(c => c.identifier === '123')
+
+            if (connection) {
+                io.to(connection.socket_id).emit('webhook', {
+                    id: issue.object_attributes.id,
+                    title: issue.object_attributes.title,
+                    description: issue.object_attributes.description,
+                    state: issue.object_attributes.state,
+                    author: issue.user
+                })
+            } else {
+                // Save in DB
+                // User ID
+                // Issue ID
+            }
+
+            if ('User wants notification') {
+                // send notification
+            }
+
+        } catch (error) {
+            next(error)
+        }
+    })
 
 router.post('/:project', async (req, res, next) => {
     try {
@@ -22,22 +66,6 @@ router.post('/:project', async (req, res, next) => {
         console.log(response.data)
 
         res.sendStatus(200)
-    } catch (error) {
-        next(error)
-    }
-})
-
-router.post('/', async (req, res, next) => {
-    res.sendStatus(200)
-
-    try {
-        console.log('new data - notify user')
-
-        const io = req.app.get('io')
-
-        const connection = connections.find(c => c.identifier === '123')
-        io.to(connection.socket_id).emit('webhook', { fancy: 'stuff' })
-
     } catch (error) {
         next(error)
     }
