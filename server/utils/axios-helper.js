@@ -20,15 +20,15 @@ export const get = async (path, token, baseUrl) => {
     return response
 }
 
-export const setHook = async (groupID, token, options) => {
-    const { webhookUrl, issue } = options
+export const setHook = async (groupID, token, webhookUrl, options) => {
+    const { issue } = options
 
     const url = `${process.env.GITLAB_API_BASE_URL}/groups/${groupID}/hooks`
 
     const params = new URLSearchParams()
     params.append('url', webhookUrl)
     params.append('token', process.env.GITLAB_WEBHOOK_TOKEN)
-    params.append('issues_events', true)
+    params.append('issues_events', issue)
 
     const response = await axios(url, {
         method: 'POST',
