@@ -10,7 +10,7 @@ import Login from './components/Login.js'
 import NotFound from './components/NotFound.js'
 import Dashboard from './components/Dashboard.js'
 
-import { AuthContext } from './context/UserState.js'
+import { AuthContext } from './context/AuthState.js'
 
 const App = () => {
   const { isAuthenticated } = useContext(AuthContext)

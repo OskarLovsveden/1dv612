@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react'
 
 import { useContext } from 'react'
-import { AuthContext } from '../context/UserState'
+import { AuthContext } from '../context/AuthState'
 
 import * as date from '../utils/date-helper.js'
 
