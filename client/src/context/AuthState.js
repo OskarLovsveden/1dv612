@@ -1,5 +1,5 @@
 import { useEffect, createContext, useReducer } from 'react'
-import UserReducer from './UserReducer'
+import UserReducer from './AuthReducer'
 import axios from 'axios'
 
 const initialState = {
