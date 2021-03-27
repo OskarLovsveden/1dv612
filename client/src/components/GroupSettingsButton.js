@@ -18,7 +18,7 @@ import {
 
 import { SettingsIcon } from '@chakra-ui/icons'
 
-const GroupSettings = (props) => {
+const GroupSettingsButton = (props) => {
     const { group } = props
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -79,4 +79,4 @@ const GroupSettings = (props) => {
     )
 }
 
-export default GroupSettings
+export default GroupSettingsButton
