@@ -20,11 +20,13 @@ export const get = async (path, token, baseUrl) => {
     return response
 }
 
-export const setHook = async (groupID, token) => {
+export const setHook = async (groupID, token, options) => {
+    const { webhookUrl, issue } = options
+
     const url = `${process.env.GITLAB_API_BASE_URL}/groups/${groupID}/hooks`
 
     const params = new URLSearchParams()
-    params.append('url', 'https://17015c7393bc.ngrok.io/webhook/gitlab')
+    params.append('url', webhookUrl)
     params.append('token', process.env.GITLAB_WEBHOOK_TOKEN)
     params.append('issues_events', true)
 
