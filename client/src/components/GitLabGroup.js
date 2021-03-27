@@ -16,14 +16,6 @@ const GitLabGroup = (props) => {
     const { user } = useContext(AuthContext)
     const { group } = props
 
-    // const addHook = async () => {
-    //     await axios(`/webhook/gitlab/${group.id}`, {
-    //         method: 'POST',
-    //         withCredentials: true,
-    //         baseURL: process.env.REACT_APP_SERVER_URL
-    //     })
-    // }
-
     return (
         <Accordion mt="1" allowToggle allowMultiple>
             {
