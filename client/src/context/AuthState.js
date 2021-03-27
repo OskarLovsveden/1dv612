@@ -1,5 +1,5 @@
 import { useEffect, createContext, useReducer } from 'react'
-import UserReducer from './AuthReducer'
+import AuthReducer from './AuthReducer'
 import axios from 'axios'
 
 const initialState = {
@@ -9,7 +9,7 @@ const initialState = {
 export const AuthContext = createContext(initialState)
 
 export const AuthProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(UserReducer, initialState)
+    const [state, dispatch] = useReducer(AuthReducer, initialState)
 
     useEffect(() => {
         checkForUser()
