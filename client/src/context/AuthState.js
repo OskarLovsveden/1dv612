@@ -1,6 +1,7 @@
 import { useEffect, createContext, useReducer } from 'react'
-import AuthReducer from './AuthReducer'
-import axios from 'axios'
+import { reducer } from './AuthReducer'
+
+import * as axios from '../utils/axios-helper'
 
 const initialState = {
     user: null
@@ -9,22 +10,22 @@ const initialState = {
 export const AuthContext = createContext(initialState)
 
 export const AuthProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(AuthReducer, initialState)
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
+        const checkForUser = async () => {
+            try {
+                const res = await axios.get('/auth/gitlab/check')
+                res.data && login(res.data)
+
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
         checkForUser()
     }, [])
 
-    const checkForUser = async () => {
-        const res = await axios('/auth/gitlab/check', {
-            withCredentials: true,
-            baseURL: process.env.REACT_APP_SERVER_URL
-        })
-
-        if (res.data) {
-            login(res.data)
-        }
-    }
 
     const isAuthenticated = () => {
         return state.user ? true : false
