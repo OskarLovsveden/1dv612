@@ -14,7 +14,6 @@ schema.statics.updateSettings = function (id, url) {
     const update = { channel_hook: url }
 
     return this.findOneAndUpdate(filter, update, {
-        upsert: true,
         new: true
     })
 }

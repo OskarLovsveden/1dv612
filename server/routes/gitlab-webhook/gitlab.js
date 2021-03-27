@@ -68,7 +68,13 @@ router.post('/:group', async (req, res, next) => {
         const hasWebhook = response.data.some(hook => hook.url === url)
 
         if (hasWebhook) {
-            res.status(409).send('Notifications already added.') // TODO - Update with (204) instead
+            const ns = await NotificationSettings.updateSettings(req.user.gitlab_id, req.body.webhookUrl)
+            if (ns) {
+                ns.save()
+                res.sendStatus(204)
+            } else {
+                res.sendStatus(404)
+            }
         } else {
             await axios.setHook(req.params.group, req.user.token, url, req.body.options)
 
