@@ -1,7 +1,9 @@
 import express from 'express'
 import createError from 'http-errors'
 
+import { NotificationSettings } from '../../models/NotificationSettings.js'
 import { connections } from '../../utils/socket.js'
+import * as discord from '../../utils/discord-helper.js'
 import * as axios from '../../utils/axios-helper.js'
 
 // import { GitLabWebhookController as Controller } from '../../controllers/gitlab-webhook-controller.js'
@@ -28,8 +30,10 @@ router.post('/',
         try {
             const io = req.app.get('io')
             const issue = req.body
+            console.log('Issue from gitlab: ', issue)
 
             const connection = connections.find(c => c.identifier === (issue.user.id).toString())
+            console.log('Socket connection: ', connection)
 
             if (connection) {
                 io.to(connection.socket_id).emit('webhook', {
@@ -39,10 +43,12 @@ router.post('/',
                     state: issue.object_attributes.state,
                     author: issue.user
                 })
-            }
-
-            if ('User wants notification') {
-                // send notification
+            } else {
+                const ns = await NotificationSettings.find({ gitlab_id: issue.user.id })
+                console.log('Settings: ', ns)
+                if (ns) {
+                    discord.send(ns.channel_hook, issue)
+                }
             }
 
         } catch (error) {
@@ -57,9 +63,24 @@ router.post('/:group', async (req, res, next) => {
             return
         }
 
-        await axios.setHook(req.params.group, req.user.token)
+        const response = await axios.get(`/groups/${req.params.group}/hooks`, req.user.token, process.env.GITLAB_API_BASE_URL)
+        const url = req.app.get('env') === 'production' ? `${req.protocol}://${req.get('host')}${req.baseUrl}` : process.env.DEV_WEBHOOK_URL
+        const hasWebhook = response.data.some(hook => hook.url === url)
 
-        res.sendStatus(200)
+        if (hasWebhook) {
+            res.status(409).send('Notifications already added.') // TODO - Update with (204) instead
+        } else {
+            await axios.setHook(req.params.group, req.user.token, url, req.body.options)
+
+            const ns = new NotificationSettings({
+                gitlab_id: req.user.gitlab_id,
+                group_id: req.params.group,
+                channel_hook: req.body.webhookUrl
+            })
+            await ns.save()
+
+            res.sendStatus(201)
+        }
     } catch (error) {
         next(error)
     }
