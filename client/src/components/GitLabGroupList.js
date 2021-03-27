@@ -12,7 +12,7 @@ import { AuthContext } from '../context/AuthState'
 
 import * as date from '../utils/date-helper.js'
 
-const GitLabGroup = (props) => {
+const GitLabGroupList = (props) => {
     const { user } = useContext(AuthContext)
     const { group } = props
 
@@ -45,4 +45,4 @@ const GitLabGroup = (props) => {
     )
 }
 
-export default GitLabGroup
+export default GitLabGroupList
