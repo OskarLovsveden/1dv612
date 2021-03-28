@@ -1,5 +1,5 @@
 const routes = Object.freeze({
-    DASHBOARD: '/',
+    HOME: '/',
     LOGIN: '/login'
 })
 

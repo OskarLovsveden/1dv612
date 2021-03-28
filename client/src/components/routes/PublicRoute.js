@@ -6,7 +6,7 @@ const PublicRoute = (props) => {
 
     const render = (props) => {
         if (isAuthenticated && restricted) {
-            return <Redirect to={routes.DASHBOARD} />
+            return <Redirect to={routes.HOME} />
         }
 
         return <Component {...props} />

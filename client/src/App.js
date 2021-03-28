@@ -20,7 +20,7 @@ const App = () => {
     <Container padding={1}>
       {location.pathname !== routes.LOGIN && <Nav />}
       <Switch>
-        <PrivateRoute isAuthenticated={isAuthenticated()} component={Dashboard} path={routes.DASHBOARD} exact />
+        <PrivateRoute isAuthenticated={isAuthenticated()} component={Dashboard} path={routes.HOME} exact />
         <PublicRoute isAuthenticated={isAuthenticated()} restricted component={Login} path={routes.LOGIN} exact />
         <PublicRoute isAuthenticated={isAuthenticated()} component={NotFound} />
       </Switch>
