@@ -13,7 +13,11 @@ import {
     Button,
     Input,
     FormLabel,
-    IconButton
+    IconButton,
+    OrderedList,
+    ListItem,
+    Text,
+    Heading
 } from "@chakra-ui/react"
 
 import { SettingsIcon } from '@chakra-ui/icons'
@@ -40,6 +44,8 @@ const GroupSettingsButton = () => {
                 webhookUrl: webhookUrl
             }
         })
+
+        onClose()
     }
 
     const handleInputChange = (event) => {
@@ -62,9 +68,18 @@ const GroupSettingsButton = () => {
 
                         <DrawerBody>
                             <FormLabel htmlFor="email-alerts" mb="0">
-                                DISC CHANNEL HOOK HERE
+                                <OrderedList>
+                                    <ListItem>Select a text channel on Discord</ListItem>
+                                    <ListItem>Press "Edit Channel"</ListItem>
+                                    <ListItem>Press "Integrations"</ListItem>
+                                    <ListItem>Press "Webhooks"</ListItem>
+                                    <ListItem>Press "New Webhook" or select an existing one</ListItem>
+                                    <ListItem>Press "Copy Webhook URL"</ListItem>
+                                </OrderedList>
                             </FormLabel>
-                            <Input onChange={e => handleInputChange(e)} placeholder="Type here..." />
+                            <Input mt="3" onChange={e => handleInputChange(e)} placeholder="Discord webhook here..." />
+                            <Heading mt="3" size="sm">Current hook:</Heading>
+                            <Text>{selectedGroup && selectedGroup.channel_hook}</Text>
                         </DrawerBody>
 
                         <DrawerFooter>
