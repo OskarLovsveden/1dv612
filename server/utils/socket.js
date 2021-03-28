@@ -1,7 +1,7 @@
 import { createServer } from 'http'
 import { Server as socket } from 'socket.io'
 
-// TODO - Socket model/database
+// TODO - Socket model/database instead of array
 export let connections = []
 
 export const connectSocket = (app) => {

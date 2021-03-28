@@ -6,7 +6,9 @@ import logger from 'morgan'
 
 import { setupPassport } from './config/passport-gitlab.js'
 import { connectDB } from './config/mongoose.js'
-import { connectSocket } from './utils/socket.js'
+
+// TODO - Add socket for real time updates
+// import { connectSocket } from './utils/socket.js'
 
 import { router } from './routes/router.js'
 
@@ -35,7 +37,9 @@ const main = async () => {
 
     app.use('/', router)
 
-    connectSocket(app).listen(process.env.PORT, () => {
+    // TODO - Add socket for real time updates
+    // connectSocket(app).listen(process.env.PORT, () => {
+    app.listen(process.env.PORT, () => {
         console.log(`Example app listening at http://localhost:${process.env.PORT}`)
         console.log(`Press ctrl + C to terminate...`)
     })
