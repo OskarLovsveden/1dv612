@@ -23,8 +23,8 @@ export const setupPassport = (app) => {
     passport.use(new GitLabStrategy({
         clientID: process.env.GITLAB_APP_ID,
         clientSecret: process.env.GITLAB_APP_SECRET,
-        callbackURL: 'http://localhost:8000/auth/gitlab/callback',
-        baseURL: 'https://gitlab.lnu.se'
+        callbackURL: process.env.GITLAB_CALLBACK_URL,
+        baseURL: process.env.GITLAB_STRATEGY_BASEURL
     }, async (token, refreshToken, profile, done) => {
         const user = await GLUser.findOrCreate(profile, token)
         await user.save()
