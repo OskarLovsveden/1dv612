@@ -6,7 +6,7 @@ export const connectSocket = (identifier) => {
     })
 
     socket.on('webhook', data => {
-        console.log(data)
+        console.log('WEBHOOK RECEIVED ON CLIENT')
     })
 
     return socket
