@@ -13,8 +13,13 @@ export const router = express.Router()
 
 const checkHeader = async (req, res, next) => {
     try {
-        if (req.headers['x-gitlab-token'] === process.env.GITLAB_WEBHOOK_TOKEN) {
+        const token = req.headers['x-gitlab-token']
+        if (token === process.env.GITLAB_WEBHOOK_TOKEN) {
             res.sendStatus(200)
+
+            const receiver = await NotificationSettings.findOne({ token: token })
+            req.receiver = receiver
+
             next()
         } else {
             res.sendStatus(400)
@@ -30,10 +35,8 @@ router.post('/',
         try {
             const io = req.app.get('io')
             const issue = req.body
-            console.log('Issue from gitlab: ', issue)
 
             const connection = connections.find(c => c.identifier === (issue.user.id).toString())
-            console.log('Socket connection: ', connection)
 
             if (connection) {
                 io.to(connection.socket_id).emit('webhook', {
@@ -44,11 +47,7 @@ router.post('/',
                     author: issue.user
                 })
             } else {
-                const ns = await NotificationSettings.find({ gitlab_id: issue.user.id })
-                console.log('Settings: ', ns)
-                if (ns) {
-                    discord.send(ns.channel_hook, issue)
-                }
+                req.receiver && discord.send(req.receiver.channel_hook, issue)
             }
 
         } catch (error) {
@@ -68,7 +67,7 @@ router.post('/:group', async (req, res, next) => {
         const hasWebhook = response.data.some(hook => hook.url === url)
 
         if (hasWebhook) {
-            const ns = await NotificationSettings.updateSettings(req.user.gitlab_id, req.body.webhookUrl)
+            const ns = await NotificationSettings.updateSettings(req.user.gitlab_id, req.body.webhookUrl, process.env.GITLAB_WEBHOOK_TOKEN)
             if (ns) {
                 ns.save()
                 res.sendStatus(204)
@@ -81,11 +80,33 @@ router.post('/:group', async (req, res, next) => {
             const ns = new NotificationSettings({
                 gitlab_id: req.user.gitlab_id,
                 group_id: req.params.group,
-                channel_hook: req.body.webhookUrl
+                channel_hook: req.body.webhookUrl,
+                token: process.env.GITLAB_WEBHOOK_TOKEN
             })
             await ns.save()
 
             res.sendStatus(201)
+        }
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.delete('/:group', async (req, res, next) => {
+    try {
+        if (!req.user) {
+            next(createError(403))
+            return
+        }
+
+        const response = await axios.get(`/groups/${req.params.group}/hooks`, req.user.token, process.env.GITLAB_API_BASE_URL)
+        const hook = response.data.find(hook => hook.group_id.toString() === req.params.group)
+
+        if (hook) {
+            await NotificationSettings.deleteOne({ group_id: req.params.group }, (err) => {
+                err ? next(createError(404)) : res.sendStatus(200)
+            })
+            await axios.removeHook(req.params.group, hook.id, req.user.token)
         }
     } catch (error) {
         next(error)
