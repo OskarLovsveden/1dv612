@@ -40,3 +40,12 @@ export const setHook = async (groupID, token, webhookUrl, options) => {
 
     return response
 }
+
+export const triggerDiscordHook = async (url, msg) => {
+    const response = await axios(url, {
+        method: 'POST',
+        data: msg
+    })
+
+    return response
+}
