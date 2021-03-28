@@ -1,23 +1,16 @@
-import { useState } from 'react'
-
 import { Box } from '@chakra-ui/react'
+import { GroupsProvider } from '../context/GroupsState'
 
 import GitLabGroupMenu from './GitLabGroupMenu'
 import GitLabGroupList from './GitLabGroupList'
 
-
-
 const Dashboard = () => {
-    const [selectedGroup, setSelectedGroup] = useState()
-
-    const selectGroup = (group) => {
-        setSelectedGroup(group)
-    }
-
     return (
         <Box p="1">
-            <GitLabGroupMenu selectGroup={selectGroup} group={selectedGroup} />
-            {selectedGroup && <GitLabGroupList group={selectedGroup} />}
+            <GroupsProvider>
+                <GitLabGroupMenu />
+                <GitLabGroupList />
+            </GroupsProvider>
         </Box>
     )
 }
