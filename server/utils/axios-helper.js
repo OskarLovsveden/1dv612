@@ -41,11 +41,20 @@ export const setHook = async (groupID, token, webhookUrl, options) => {
     return response
 }
 
-export const triggerDiscordHook = async (url, msg) => {
+export const removeHook = async (groupID, hookID, token) => {
+    const url = `${process.env.GITLAB_API_BASE_URL}/groups/${groupID}/hooks/${hookID}`
+
     const response = await axios(url, {
-        method: 'POST',
-        data: msg
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
     })
 
+    return response
+}
+
+export const triggerDiscordHook = async (url, msg) => {
+    const response = await axios.post(url, msg)
     return response
 }
