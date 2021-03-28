@@ -50,8 +50,6 @@ const GroupSettingsButton = () => {
     const addHook = async () => {
         await axios.post(`/webhook/gitlab/${selectedGroup.id}`, {
             options: {
-                // TODO - Add more options (releases, commits, etc.)
-                // Only option and true by default for now
                 issue: notifyIssue,
                 release: notifyRelease
             },
