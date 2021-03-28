@@ -20,15 +20,16 @@ export const get = async (path, token, baseUrl) => {
     return response
 }
 
-export const setHook = async (groupID, token, webhookUrl, options) => {
-    const { issue } = options
-
-    const url = `${process.env.GITLAB_API_BASE_URL}/groups/${groupID}/hooks`
+export const setHook = async (token, groupID, serverRoute, options) => {
+    const { issue, release } = options
 
     const params = new URLSearchParams()
-    params.append('url', webhookUrl)
+    params.append('url', serverRoute)
     params.append('token', process.env.GITLAB_WEBHOOK_TOKEN)
     params.append('issues_events', issue)
+    params.append('releases_events', release)
+
+    const url = `${process.env.GITLAB_API_BASE_URL}/groups/${groupID}/hooks`
 
     const response = await axios(url, {
         method: 'POST',
@@ -41,7 +42,29 @@ export const setHook = async (groupID, token, webhookUrl, options) => {
     return response
 }
 
-export const removeHook = async (groupID, hookID, token) => {
+export const editHook = async (token, groupID, hookID, serverRoute, options) => {
+    const { issue, release } = options
+
+    const params = new URLSearchParams()
+    params.append('url', serverRoute)
+    params.append('token', process.env.GITLAB_WEBHOOK_TOKEN)
+    params.append('issues_events', issue)
+    params.append('releases_events', release)
+
+    const url = `${process.env.GITLAB_API_BASE_URL}/groups/${groupID}/hooks/${hookID}`
+
+    const response = await axios(url, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        data: params
+    })
+
+    return response
+}
+
+export const removeHook = async (token, groupID, hookID) => {
     const url = `${process.env.GITLAB_API_BASE_URL}/groups/${groupID}/hooks/${hookID}`
 
     const response = await axios(url, {
