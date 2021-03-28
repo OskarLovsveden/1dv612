@@ -5,6 +5,8 @@ import * as axios from '../../utils/axios-helper.js'
 export const router = express.Router()
 // const controller = new Controller()
 
+import { NotificationSettings } from '../../models/NotificationSettings.js'
+
 router.get('/groups', async (req, res, next) => {
     try {
         const response = await axios.get('/groups?min_access_level=50', req.user.token, process.env.GITLAB_API_BASE_URL)
@@ -17,6 +19,9 @@ router.get('/groups', async (req, res, next) => {
 
         for (const group of groups) {
             const response = await axios.get(`/groups/${group.id}`, req.user.token, process.env.GITLAB_API_BASE_URL)
+            const ns = await NotificationSettings.findOne({ group_id: group.id })
+
+            group.channel_hook = ns ? ns.channel_hook : 'None'
 
             group.projects = response.data.projects.map(project => ({
                 "id": project.id,
