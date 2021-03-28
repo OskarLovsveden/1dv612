@@ -2,11 +2,7 @@ import express from 'express'
 import passport from 'passport'
 import { GLUser } from '../../models/GLUser.js'
 
-// import { GitLabAuthController as Controller} from '../../controllers/gitlab-controller.js'
-
 export const router = express.Router()
-
-// const controller = new Controller()
 
 router.get('/', passport.authenticate('gitlab', {
     scope: ['api read_user read_api read_repository write_repository read_registry write_registry sudo openid profile email']
