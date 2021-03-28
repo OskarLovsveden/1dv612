@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { useRef, useState, useContext } from 'react'
 
 import {
@@ -20,31 +19,37 @@ import {
     Heading
 } from "@chakra-ui/react"
 
+import * as axios from '../utils/axios-helper'
+
 import { SettingsIcon } from '@chakra-ui/icons'
 import { GroupsContext } from '../context/GroupsState'
 
 const GroupSettingsButton = () => {
-    const { selectedGroup } = useContext(GroupsContext)
+    const { selectedGroup, selectGroup } = useContext(GroupsContext)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [webhookUrl, setWebhookUrl] = useState('')
     const btnRef = useRef()
 
     const addHook = async () => {
-        await axios(`/webhook/gitlab/${selectedGroup.id}`, {
-            method: 'POST',
-            withCredentials: true,
-            baseURL: process.env.REACT_APP_SERVER_URL,
-            data: {
-                options: {
-                    // TODO - Add more options (releases, commits, etc.)
-                    // Only option and true by default for now
-                    issue: true
-                },
-                webhookUrl: webhookUrl
-            }
-        })
+        await axios.post(`/webhook/gitlab/${selectedGroup.id}`, {
+            options: {
+                // TODO - Add more options (releases, commits, etc.)
+                // Only option and true by default for now
+                issue: true
+            },
+            webhookUrl: webhookUrl
+        }
+        )
 
+        selectGroup({ ...selectedGroup, channel_hook: webhookUrl })
+        onClose()
+    }
+
+    const removeHook = async () => {
+        await axios.remove(`/webhook/gitlab/${selectedGroup.id}`)
+
+        selectGroup({ ...selectedGroup, channel_hook: '-' })
         onClose()
     }
 
@@ -54,7 +59,12 @@ const GroupSettingsButton = () => {
 
     return (
         <>
-            <IconButton isLoading={!selectedGroup} ref={btnRef} onClick={onOpen} icon={<SettingsIcon />} />
+            <IconButton
+                isLoading={!selectedGroup}
+                ref={btnRef}
+                onClick={onOpen}
+                icon={<SettingsIcon />}
+            />
             <Drawer
                 isOpen={isOpen}
                 placement="right"
@@ -64,7 +74,7 @@ const GroupSettingsButton = () => {
                 <DrawerOverlay>
                     <DrawerContent>
                         <DrawerCloseButton />
-                        <DrawerHeader>Notification Settings</DrawerHeader>
+                        <DrawerHeader>Offline Notifications</DrawerHeader>
 
                         <DrawerBody>
                             <FormLabel htmlFor="email-alerts" mb="0">
@@ -83,9 +93,7 @@ const GroupSettingsButton = () => {
                         </DrawerBody>
 
                         <DrawerFooter>
-                            <Button variant="outline" mr={3} onClick={onClose}>
-                                Cancel
-                            </Button>
+                            <Button variant="outline" mr={3} onClick={removeHook}>Delete</Button>
                             <Button colorScheme="blue" onClick={addHook}>Save</Button>
                         </DrawerFooter>
                     </DrawerContent>
