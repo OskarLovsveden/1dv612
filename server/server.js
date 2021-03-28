@@ -1,4 +1,6 @@
 import express from 'express'
+import connectRedis from 'connect-redis'
+import { createClient } from 'redis'
 import session from 'express-session'
 import cors from 'cors'
 import helmet from 'helmet'
@@ -26,12 +28,29 @@ const main = async () => {
     app.use(logger('dev'))
     app.use(express.json())
 
+    const RedisStore = connectRedis(session)
+
+    app.set('trust proxy', 1)
+
     app.use(session({
+        store: new RedisStore({ client: createClient(process.env.REDIS_URL) }),
         secret: process.env.SESSION_SECRET,
-        resave: false,
+        resave: true,
         saveUninitialized: false,
-        cookie: { maxAge: 60 * 60 * 1000 }
+        cookie: {
+            maxAge: 60 * 60 * 1000,
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+        }
     }))
+
+    app.use(function (req, res, next) {
+        if (!req.session) {
+            return next(new Error('oh no')) // handle error
+        }
+        next() // otherwise continue
+    })
 
     setupPassport(app)
 
