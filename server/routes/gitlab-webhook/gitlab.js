@@ -9,10 +9,7 @@ import { NotificationSettings } from '../../models/NotificationSettings.js'
 import * as discord from '../../utils/discord-helper.js'
 import * as axios from '../../utils/axios-helper.js'
 
-// import { GitLabWebhookController as Controller } from '../../controllers/gitlab-webhook-controller.js'
-
 export const router = express.Router()
-// const controller = new Controller()
 
 const checkHeader = async (req, res, next) => {
     try {
