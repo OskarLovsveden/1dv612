@@ -1,3 +1,5 @@
+import { useContext } from 'react'
+
 import {
     Accordion,
     AccordionItem,
@@ -7,19 +9,19 @@ import {
     AccordionPanel
 } from '@chakra-ui/react'
 
-import { useContext } from 'react'
 import { AuthContext } from '../context/AuthState'
+import { GroupsContext } from '../context/GroupsState'
 
 import * as date from '../utils/date-helper.js'
 
-const GitLabGroupList = (props) => {
+const GitLabGroupList = () => {
+    const { selectedGroup } = useContext(GroupsContext)
     const { user } = useContext(AuthContext)
-    const { group } = props
 
     return (
         <Accordion mt="1" allowToggle allowMultiple>
-            {
-                group.projects.map(p => (
+            { selectedGroup &&
+                selectedGroup.projects.map(p => (
                     p.issues.map(i => (
                         <AccordionItem key={i.id}>
                             <h2>

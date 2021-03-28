@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext } from 'react'
 
 import {
     Box,
@@ -11,26 +11,12 @@ import {
 } from '@chakra-ui/react'
 
 import { ChevronDownIcon } from '@chakra-ui/icons'
+import { GroupsContext } from '../context/GroupsState'
+
 import GroupSettingsButton from './GroupSettingsButton'
-import * as axios from '../utils/axios-helper'
 
-const GitLabGroupMenu = (props) => {
-    const { selectGroup, group } = props
-    const [groups, setGroups] = useState()
-
-    useEffect(() => {
-        const getGroups = async () => {
-            try {
-                const res = await axios.get('/api/gitlab/groups')
-                setGroups(res.data)
-                selectGroup(res.data[0])
-            } catch (error) {
-                console.error(error)
-            }
-        }
-
-        getGroups()
-    }, [])
+const GitLabGroupMenu = () => {
+    const { groups, selectedGroup, selectGroup } = useContext(GroupsContext)
 
     const clickGroup = (name) => {
         const group = groups.find(g => g.name === name)
@@ -49,14 +35,14 @@ const GitLabGroupMenu = (props) => {
                 Select Group
                 </MenuButton>
             <Box as="span" ml="2" color="gray.600">
-                <GroupSettingsButton group={group} />
+                <GroupSettingsButton />
             </Box>
             <MenuList>
                 {
-                    groups &&
+                    selectedGroup &&
                     <MenuOptionGroup
                         onChange={(group) => clickGroup(group)}
-                        defaultValue={groups[0].name}
+                        defaultValue={selectedGroup.name}
                         type="radio"
                     >
                         {groups.map(g => (

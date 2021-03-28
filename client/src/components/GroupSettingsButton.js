@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useRef, useState } from 'react'
+import { useRef, useState, useContext } from 'react'
 
 import {
     Drawer,
@@ -17,16 +17,17 @@ import {
 } from "@chakra-ui/react"
 
 import { SettingsIcon } from '@chakra-ui/icons'
+import { GroupsContext } from '../context/GroupsState'
 
-const GroupSettingsButton = (props) => {
-    const { group } = props
+const GroupSettingsButton = () => {
+    const { selectedGroup } = useContext(GroupsContext)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [webhookUrl, setWebhookUrl] = useState('')
     const btnRef = useRef()
 
     const addHook = async () => {
-        await axios(`/webhook/gitlab/${group.id}`, {
+        await axios(`/webhook/gitlab/${selectedGroup.id}`, {
             method: 'POST',
             withCredentials: true,
             baseURL: process.env.REACT_APP_SERVER_URL,
@@ -47,7 +48,7 @@ const GroupSettingsButton = (props) => {
 
     return (
         <>
-            <IconButton isLoading={!group} ref={btnRef} onClick={onOpen} icon={<SettingsIcon />} />
+            <IconButton isLoading={!selectedGroup} ref={btnRef} onClick={onOpen} icon={<SettingsIcon />} />
             <Drawer
                 isOpen={isOpen}
                 placement="right"
