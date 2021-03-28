@@ -47,9 +47,9 @@ const main = async () => {
 
     app.use(function (req, res, next) {
         if (!req.session) {
-            return next(new Error('oh no')) // handle error
+            return next(new Error('No session...'))
         }
-        next() // otherwise continue
+        next()
     })
 
     setupPassport(app)
