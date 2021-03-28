@@ -1,9 +1,7 @@
 import express from 'express'
 import * as axios from '../../utils/axios-helper.js'
-// import { GitLabApiController as Controller } from '../../controllers/gitlab-api-controller.js'
 
 export const router = express.Router()
-// const controller = new Controller()
 
 import { NotificationSettings } from '../../models/NotificationSettings.js'
 
