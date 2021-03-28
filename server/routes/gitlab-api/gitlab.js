@@ -21,7 +21,7 @@ router.get('/groups', async (req, res, next) => {
             const response = await axios.get(`/groups/${group.id}`, req.user.token, process.env.GITLAB_API_BASE_URL)
             const ns = await NotificationSettings.findOne({ group_id: group.id })
 
-            group.channel_hook = ns ? ns.channel_hook : 'None'
+            group.channel_hook = ns ? ns.channel_hook : '-'
 
             group.projects = response.data.projects.map(project => ({
                 "id": project.id,
